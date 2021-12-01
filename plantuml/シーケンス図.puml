@@ -1,0 +1,19 @@
+@startuml
+Actor client
+participant payment
+participant user
+participant product
+client -> payment : POST /payment
+note right : request body: {order: [productID: str, quantity: int], userID: str}
+loop range order
+    payment -> product : GET /product/:productID
+    product --> payment : Product
+    payment -> payment: totalAmount += Product.Price * quantity
+    payment -> product : POST /product/:productID/reduceStock
+    note right: request body: {quantity: order.quantity}
+end
+
+payment -> user : POST /user/:userID/reduceBalance
+note right: request body: {amount: totalAmount}
+payment --> client : 200 OK
+@enduml

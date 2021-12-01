@@ -1,0 +1,65 @@
+I, [2021-11-23T23:51:00.296171 #27759]  INFO -- : Registered expected interaction GET /product/product0001
+D, [2021-11-23T23:51:00.297330 #27759] DEBUG -- : {
+  "description": "A request to get product0001",
+  "providerState": "Product product0001 exists",
+  "request": {
+    "method": "GET",
+    "path": "/product/product0001"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "price": {
+        "json_class": "Pact::SomethingLike",
+        "contents": 1
+      },
+      "productID": {
+        "json_class": "Pact::SomethingLike",
+        "contents": "string"
+      },
+      "stock": {
+        "json_class": "Pact::SomethingLike",
+        "contents": 1
+      }
+    }
+  },
+  "metadata": null
+}
+I, [2021-11-23T23:51:00.300325 #27759]  INFO -- : Received request GET /product/product0001
+D, [2021-11-23T23:51:00.300385 #27759] DEBUG -- : {
+  "path": "/product/product0001",
+  "query": "",
+  "method": "get",
+  "headers": {
+    "Host": "localhost:53826",
+    "User-Agent": "Go-http-client/1.1",
+    "Accept-Encoding": "gzip",
+    "Version": "HTTP/1.1"
+  }
+}
+I, [2021-11-23T23:51:00.300571 #27759]  INFO -- : Found matching response for GET /product/product0001
+D, [2021-11-23T23:51:00.300648 #27759] DEBUG -- : {
+  "status": 200,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": {
+    "price": {
+      "json_class": "Pact::SomethingLike",
+      "contents": 1
+    },
+    "productID": {
+      "json_class": "Pact::SomethingLike",
+      "contents": "string"
+    },
+    "stock": {
+      "json_class": "Pact::SomethingLike",
+      "contents": 1
+    }
+  }
+}
+I, [2021-11-23T23:51:00.302371 #27759]  INFO -- : Verifying - interactions matched
+I, [2021-11-23T23:51:00.304088 #27759]  INFO -- : Cleared interactions

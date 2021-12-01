@@ -1,0 +1,45 @@
+{
+  "consumer": {
+    "name": "payment"
+  },
+  "provider": {
+    "name": "product"
+  },
+  "interactions": [
+    {
+      "description": "A request to get product0001",
+      "providerState": "Product product0001 exists",
+      "request": {
+        "method": "GET",
+        "path": "/product/product0001"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "price": 1,
+          "productID": "string",
+          "stock": 1
+        },
+        "matchingRules": {
+          "$.body.price": {
+            "match": "type"
+          },
+          "$.body.productID": {
+            "match": "type"
+          },
+          "$.body.stock": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
