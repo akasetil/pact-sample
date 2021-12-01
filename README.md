@@ -31,12 +31,10 @@ go test -v ./...
 
 ```
 cd product
-pip install -r requirements.txt
-./verify-pact.sh
+npm install
+// もしPermission deniedが発生したら, sudo npm install を実行する
+./node_modules/.bin/mocha test/provider.spec.js
 ```
 
-`pactfile/`ディレクトリに契約書ファイルを読み込み後　
-main で定義しているアプリ設定に setup 用のパスを付与したコードを起動する  
-その後 pact の cli で検証を行なっている
-
-Product のクラス定義などを変更すると pact の検証で失敗するようになる
+`pactfile/`ディレクトリにある契約書ファイルを読み込み、テストを mocha を利用したテストを実行している
+返却する Product の構造体を変更すると pact の検証で失敗するようになる

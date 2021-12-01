@@ -2,9 +2,10 @@ package service
 
 import (
 	"fmt"
-	"github.com/pact-foundation/pact-go/dsl"
+	"github.com/pact-foundation/pact-go/v2/consumer"
+	"github.com/pact-foundation/pact-go/v2/matchers"
+	. "github.com/pact-foundation/pact-go/v2/sugar"
 	"log"
-	"payment/model"
 	"testing"
 )
 
@@ -13,32 +14,34 @@ func TestConsumer(t *testing.T) {
 	productID := "product0001"
 
 	// Create Pact connecting to local Daemon
-	pact := &dsl.Pact{
+	pact, err := consumer.NewV3Pact(consumer.MockHTTPProviderConfig{
 		Consumer: "payment",
 		Provider: "product",
-		Host:     "localhost",
+		Host:     "127.0.0.1",
 		PactDir: "../../pactfile",
+	})
+	if err != nil {
+		t.Fatal(err)
 	}
-	defer pact.Teardown()
 
 	// Set up our expected interactions.
 	pact.
 		AddInteraction().
-		Given(fmt.Sprintf("Product %s exists", productID)).
+		Given(ProviderStateV3{Name: fmt.Sprintf("Product %s exists", productID)}).
 		UponReceiving(fmt.Sprintf("A request to get %s", productID)).
-		WithRequest(dsl.Request{
-			Method:  "GET",
-			Path:    dsl.String(fmt.Sprintf("/product/%s", productID)),
-		}).
-		WillRespondWith(dsl.Response{
-			Status:  200,
-			Headers: dsl.MapMatcher{"Content-Type": dsl.String("application/json")},
-			Body:    dsl.Match(&model.Product{}),
+		WithRequest("GET", matchers.String(fmt.Sprintf("/product/%s", productID))).
+		WillRespondWith(200).
+		WithHeader("Content-Type", Regex("application/json; charset=utf-8", "application\\/json; charset=utf-8")).
+		WithJSONBody(Map{
+			"productID": S("product0001"),
+			"price": Integer(100),
+			"stock": Integer(10),
 		})
 
 	// Run the test, verify it did what we expected and capture the contract
-	if err := pact.Verify(func() (err error) {
-		productClient := ProductClient{baseURL: fmt.Sprintf("http://localhost:%d", pact.Server.Port)}
+	if err := pact.ExecuteTest(t, func(config MockServerConfig) (err error) {
+		log.Println(config.Port)
+		productClient := ProductClient{baseURL: fmt.Sprintf("http://localhost:%d", config.Port)}
 		_, err = productClient.getProduct(productID)
 		if err != nil {
 			return

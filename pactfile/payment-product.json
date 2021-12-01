@@ -2,44 +2,73 @@
   "consumer": {
     "name": "payment"
   },
-  "provider": {
-    "name": "product"
-  },
   "interactions": [
     {
       "description": "A request to get product0001",
-      "providerState": "Product product0001 exists",
+      "providerStates": [
+        {
+          "name": "Product product0001 exists"
+        }
+      ],
       "request": {
         "method": "GET",
         "path": "/product/product0001"
       },
       "response": {
-        "status": 200,
-        "headers": {
-          "Content-Type": "application/json"
-        },
         "body": {
-          "price": 1,
-          "productID": "string",
-          "stock": 1
+          "price": 100,
+          "productID": "product0001",
+          "stock": 10
+        },
+        "headers": {
+          "Content-Type": "application/json; charset=utf-8"
         },
         "matchingRules": {
-          "$.body.price": {
-            "match": "type"
+          "body": {
+            "$.price": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.stock": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
           },
-          "$.body.productID": {
-            "match": "type"
-          },
-          "$.body.stock": {
-            "match": "type"
+          "header": {
+            "$['Content-Type']": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "regex",
+                  "regex": "application\\/json; charset=utf-8"
+                }
+              ]
+            }
           }
-        }
+        },
+        "status": 200
       }
     }
   ],
   "metadata": {
+    "pactRust": {
+      "ffi": "\"0.1.2\"",
+      "mockserver": "\"0.8.3\"",
+      "models": "0.2.1"
+    },
     "pactSpecification": {
-      "version": "2.0.0"
+      "version": "3.0.0"
     }
+  },
+  "provider": {
+    "name": "product"
   }
 }

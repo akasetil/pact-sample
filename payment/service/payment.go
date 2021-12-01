@@ -14,7 +14,6 @@ func (PaymentService) Payment(payment *model.Payment) error {
 	productClient := ProductClient{baseURL: "http://127.0.0.1:8000"}
 	userClient := UserClient{baseURL: "http://127.0.0.1:8001"}
 
-
 	var totalAmount int
 	for _, order := range payment.Order {
 		product, err := productClient.getProduct(order.ProductID)
